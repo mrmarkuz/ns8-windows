@@ -23,9 +23,11 @@ ExecStart=/usr/bin/podman run \
     --cidfile=%t/windows.ctr-id \
     --cgroups=no-conmon \
     --replace --name=%N \
-    --publish=127.0.0.1:${TCP_PORT}:8080 \
-    --env-file=smarthost.env \
-    ${ECHO_SERVER_IMAGE}
+    --publish=127.0.0.1:${TCP_PORT}:8006 \
+    --env-file=environment \
+    --device /dev/kvm \
+    --cap-add NET_ADMIN \
+    ${WINDOWS_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/windows.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/windows.ctr-id
 PIDFile=%t/windows.pid
