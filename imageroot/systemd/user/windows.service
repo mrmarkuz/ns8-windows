@@ -26,7 +26,10 @@ ExecStart=/usr/bin/podman run \
     --publish=127.0.0.1:${TCP_PORT}:8006 \
     --env-file=environment \
     --device /dev/kvm \
-    --cap-add NET_ADMIN \
+    --device /dev/net/tun \
+    --group-add keep-groups \
+    --cap-add=NET_ADMIN,NET_RAW \
+    --volume windows-data:/storage:Z \
     ${WINDOWS_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/windows.ctr-id -t 10
 ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/windows.ctr-id
